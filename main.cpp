@@ -55,21 +55,22 @@ int main() {
         while (data >> line)
         {
             std::vector<double> row;
+            bool has_only_digits = (line.find_first_not_of( ",.0123456789" ) == std::string::npos);
+            if (!has_only_digits)
+            {
+                throw std::invalid_argument("The line contains not only numbers and separators");
+            }
             stringSeparation(line, row);
             if (row.size() != numOfColumns)
             {
-                throw 1;
+                throw std::logic_error("Invalid number of elements in a row");
             }
             values.push_back(row);
         }
     }
-    catch (int err) {
-        switch (err) {
-            case 1:
-                std::cout << "Invalid number of elements in a row" << std::endl;
-                return 1;
-        }
-
+    catch (const std::exception& exc){
+        std::cout << exc.what();
+        return 1;
     }
 
     //printing
@@ -77,7 +78,7 @@ int main() {
     {
         std::cout << names[i] << ' ';
     }
-    std::cout<<std::endl;
+    std::cout << std::endl;
     for (int i=0; i < values.size(); ++i)
     {
         for (int j=0; j < numOfColumns; ++j)
@@ -85,7 +86,7 @@ int main() {
             std::cout << std::setw(names[j].size());
             std::cout << values[i][j] << ' ';
         }
-        std::cout<<std::endl;
+        std::cout << std::endl;
     }
     return 0;
 }
